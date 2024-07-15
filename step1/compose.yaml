@@ -1,0 +1,25 @@
+services:
+  app:
+    build: ./dice
+    ports:
+      - 8080:8080
+    environment:
+      - OTEL_LOGS_EXPORTER=none
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_RESOURCE_ATTRIBUTES="service.name=dice-server,aws.log.group.names=dice-server"
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4316/v1/traces
+      - OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT=http://cw-agent:4316/v1/metrics
+      - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
+
+  cw-agent:
+    image: public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest
+    volumes:
+      - ./cwagent.json:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
+    ports:
+      - 4316:4316
