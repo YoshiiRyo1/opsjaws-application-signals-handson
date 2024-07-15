@@ -72,6 +72,11 @@ resource "aws_iam_role" "cloud9" {
   ]
 }
 
+resource "aws_iam_instance_profile" "cloud9" {
+  name = "cloud9-handson-profile"
+  role = aws_iam_role.cloud9.name
+}
+
 // Cloud9 Environment
 resource "aws_cloud9_environment_ec2" "main" {
   instance_type               = "m5.large"
