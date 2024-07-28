@@ -2,9 +2,7 @@ receivers:
   otlp:
     protocols:
       grpc:
-        endpoint: 127.0.0.1:4317
-        tls:
-          insecure: false
+      http:
 
 processors:
   batch:
@@ -29,9 +27,3 @@ service:
       receivers: [otlp]
       processors: [memory_limiter,batch]
       exporters: [awscloudwatchlogs]
-
-    traces:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [otlphttp]
-
