@@ -56,8 +56,8 @@ services:
     ports:
       - '4566:4566'
     volumes:
-      - "./data/tmp:/tmp/localstack"
-      - "./data/var/run/docker.sock:/var/run/docker.sock"
+      - "${LOCALSTACK_VOLUME_DIR:-./data}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
   setup:
     image: mesosphere/aws-cli

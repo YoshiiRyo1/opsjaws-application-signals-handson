@@ -7,7 +7,6 @@
                 <timestampFormat>yyyy-MM-dd' 'HH:mm:ss.SSS</timestampFormat>
                 <appendLineSeparator>true</appendLineSeparator>
             </layout>
-            <pattern>%d{HH:mm:ss.SSS} trace_id=%X{AWS-XRAY-TRACE-ID} span_id=%X{span_id} trace_flags=%X{trace_flags} %msg%n</pattern>
         </encoder>
     </appender>
 

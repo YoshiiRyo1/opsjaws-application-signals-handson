@@ -18,9 +18,6 @@ exporters:
     region: "ap-northeast-1"
     log_retention: 7
 
-  otlphttp:
-    endpoint: "http://cw-agent:4316/v1/traces"
-
 service:
   pipelines:
     logs:

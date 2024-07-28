@@ -41,6 +41,8 @@ dependencies {
 
     implementation "io.opentelemetry:opentelemetry-api"
     implementation "io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations"
+    
+    runtimeOnly "io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:2.6.0-alpha"
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
