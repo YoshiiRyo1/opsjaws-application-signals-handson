@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+                <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter" />
+                <timestampFormat>yyyy-MM-dd' 'HH:mm:ss.SSS</timestampFormat>
+                <appendLineSeparator>true</appendLineSeparator>
+            </layout>
+            <pattern>%d{HH:mm:ss.SSS} trace_id=%X{AWS-XRAY-TRACE-ID} span_id=%X{span_id} trace_flags=%X{trace_flags} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Just wrap your logging appender, for example ConsoleAppender, with OpenTelemetryAppender -->
+    <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.mdc.v1_0.OpenTelemetryAppender">
+    </appender>
+
+    <!-- LOG everything at INFO level -->
+    <root level="info">
+        <appender-ref ref="stdout" />
+        <appender-ref ref="OTEL"/>
+    </root>
+
+    <!-- LOG "ca.petsearch" at DEBUG level -->
+    <!-- <logger name="ca.petsearch" level="debug" additivity="false" /> -->
+
+    <!-- Fix for EC2MetadataUtils described in https://docs.spring.io/spring-cloud-aws/docs/2.2.3.RELEASE/reference/html/\#\#amazon-sdk-configuration -->
+
+    <logger name="com.amazonaws.util.EC2MetadataUtils" level="error" additivity="false" />
+    <logger name="com.amazonaws.internal.InstanceMetadataServiceResourceFetcher" level="error" additivity="false" />
+
+
+</configuration>

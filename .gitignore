@@ -41,3 +41,4 @@ terraform.rc
 .env
 .envrc
 credentials
+step3/data/
