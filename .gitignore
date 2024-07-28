@@ -37,6 +37,7 @@ terraform.rc
 # Mac
 .DS_Store
 
-# Docker Compose
+# local env files
 .env
 .envrc
+credentials

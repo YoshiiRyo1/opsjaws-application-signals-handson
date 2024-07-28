@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dice-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dice-server
+  template:
+    metadata:
+      labels:
+        app: dice-server
+    spec:
+      containers:
+      - name: dice-server
+        image: dice
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: OTEL_TRACES_EXPORTER
+          value: otlp
+        - name: OTEL_LOGS_EXPORTER
+          value: otlp
+        - name: OTEL_METRICS_EXPORTER
+          value: none
+        - name: OTEL_PROPAGATORS
+          value: tracecontext,baggage,b3,xray
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: service.name=dice-server,aws.log.group.names=dice-server
+        - name: OTEL_EXPORTER_OTLP_PROTOCOL
+          value: http/protobuf
+        - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+          value: http://cloudwatch-agent:4316/v1/traces
+        - name: OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
+          value: http://cloudwatch-agent:4316/v1/logs
+        - name: OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT
+          value: http://cloudwatch-agent:4316/v1/metrics
+        - name: OTEL_AWS_APPLICATION_SIGNALS_ENABLED
+          value: "true"
+        - name: JAVA_TOOL_OPTIONS
+          value: "-javaagent:/app/opentelemetry-javaagent.jar"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dice-server
+spec:
+  selector:
+    app: dice-server
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

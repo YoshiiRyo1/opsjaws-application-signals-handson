@@ -4,22 +4,27 @@ services:
     ports:
       - 8080:8080
     environment:
+      - OTEL_TRACES_EXPORTER=otlp
       - OTEL_LOGS_EXPORTER=none
       - OTEL_METRICS_EXPORTER=none
-      - OTEL_RESOURCE_ATTRIBUTES="service.name=dice-server,aws.log.group.names=dice-server"
+      - OTEL_PROPAGATORS=tracecontext,baggage,b3,xray
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=dice-server,aws.log.group.names=dice-server
       - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
       - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4316/v1/traces
       - OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT=http://cw-agent:4316/v1/metrics
       - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
+      - JAVA_TOOL_OPTIONS="-javaagent:/app/opentelemetry-javaagent.jar"
 
   cw-agent:
     image: public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest
     volumes:
-      - ./cwagent.json:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
-    environment:
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_REGION=${AWS_REGION}
-      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
+      - ./cwagent.json:/etc/cwagentconfig
     ports:
       - 4316:4316
+
+  adot:
+    image: public.ecr.aws/aws-observability/aws-otel-collector:v0.40.0
+    command:
+      - --config=/etc/otel-agent-config.yaml
+    volumes:
+      - ./otel-agent-config.yaml:/etc/otel-agent-config.yaml
