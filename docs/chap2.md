@@ -100,7 +100,7 @@ CloudWatch Logs を見てみます。
 そのメトリクスは CloudWatch Metrics に表示されています。  
 カスタム名前空間 `ApplicationSignals` が作られます。Error、Latency、Fault などのメトリクスが表示されています。  
 
-![cwmetrics](./imgs/chap_cwmetrics.png)  
+![cwmetrics](./imgs/chap2_cwmetrics.png)  
 
 ![metrics](./imgs/chap2_metrices.png)  
 

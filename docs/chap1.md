@@ -1,121 +1,59 @@
 # Capter 1
 
-## VPC, Cloud9, Instance Profile
+この章は、ハンズオン前の準備を行います。  
+
+## AWS リソースの作成
+
+以下のリソースを作成してください。  
+
+- VPC
+  - 既存のものでも新規作成でも構いません
+- パブリックサブネット
+  - 1つ
+  - 既存のものでも新規作成でも構いません
+- EC2 インスタンスプロファイル
+  - 1つ
+  - 付与するポリシーは2つ
+    - AmazonSSMManagedInstanceCore
+    - CloudWatchAgentServerPolicy
+- セキュリティグループ
+  - 1つ
+  - インバウンドはルール無し
+  - アウトバウンドは全て許可
+- EC2 インスタンス
+  - 1台
+  - AMI は以下のいずれか
+    - Amazon ECS-Optimized Amazon Linux 2023 (AL2023) x86_64 AMI
+  - 上のインスタンスプロファイルとセキュリティグループをアタッチ
+  - パブリックサブネットに配置
+  - スペック -> 2vCPU, 8GB メモリー以上
+  - EBS ボリューム -> 20GB 以上
+- CloudWatch Logs ロググループ
+  - 2つ
+  - グループ名 -> dice-server
+  - グループ名 -> petseach
 
 
-## Cloud9 のインスタンスプロフェイルを変更する
+Terraform も用意しています。[こちら](../terraform)。  
+手動でも Terraform でもお好きな方法で作成してください。  
 
+## リポジトリのクローン
 
-## Cloud9 の設定を変更する
+作成した EC2 インスタンスに、ここのリポジトリをクローンしてください。  
 
-![alt text](./chap1_setting.png)
+## Docker Compose インストール
 
-![alt text](./chap1_amtc.png)
-
-![alt text](./chap1_terminal.png)
-
-## Cloud9 の EBS ボリュームを拡張する
-
-```bash
-$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/
-$ INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id)
-$ VOLUME_ID=$(aws ec2 describe-instances --filters Name=instance-id,Values=$INSTANCE_ID | jq -r .Reservations[0].Instances[0].BlockDeviceMappings[0].Ebs.VolumeId)
-$ echo $VOLUME_ID
-## ここで ボリューム ID が表示されない場合は先へ進まないでください。手順を最初から見直してください。
-
-$ aws ec2 modify-volume --size 20 --volume-id $VOLUME_ID
-
-$ while true
-do
-  VOLUME_STATE=$(aws ec2 describe-volumes-modifications --volume-ids --volume-ids $VOLUME_ID | jq -r .VolumesModifications[0].ModificationState)
-  if [ $VOLUME_STATE = "completed" ]; then
-    echo "modify-volume is done. This machine will be rebooted."
-    sudo reboot
-    break
-  else
-    echo "waiting for volume modification..."
-  fi
-  sleep 10
-done
-```
-
-Cloud9 マシンが再起動します。しばらく待ちます。  
-
-```bash
-$ df -h /
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/nvme0n1p1   20G  7.1G   13G  36% /
-## 20Gであることを確認
-```
-
-## minikube インストール
-
-```bash
-$ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
-$ sudo rpm -Uvh minikube-latest.x86_64.rpm
-Verifying...                          ################################# [100%]
-Preparing...                          ################################# [100%]
-Updating / installing...
-   1:minikube-1.33.1-0                ################################# [100%]
-
-$ rm minikube-latest.x86_64.rpm 
-```
-
-## kubectl インストール
-
-```bash
-$ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-$ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
-$ echo 'source <(kubectl completion bash)' >>~/.bashrc
-$ echo 'alias k=kubectl' >>~/.bashrc
-$ echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
-$ source ~/.bashrc
-```
-
-```bash
-$ k 
-kubectl controls the Kubernetes cluster manager.
-
- Find more information at: https://kubernetes.io/docs/reference/kubectl/
-〜〜省略〜〜
-```
-
-
-## minikube スタート
-
-```bash
-$ minikube start --cpus='2' --memory='6G'
-* minikube v1.33.1 on Amazon 2023.5.20240624
-〜〜省略〜〜
-* Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
-```
-
-```bash
-$ k get ns -A
-NAME              STATUS   AGE
-default           Active   26s
-kube-node-lease   Active   26s
-kube-public       Active   26s
-kube-system       Active   26s
-
-$ k get pod -A
-NAMESPACE     NAME                               READY   STATUS    RESTARTS      AGE
-kube-system   coredns-7db6d8ff4d-wjpm2           1/1     Running   0             51s
-kube-system   etcd-minikube                      1/1     Running   0             65s
-kube-system   kube-apiserver-minikube            1/1     Running   0             65s
-kube-system   kube-controller-manager-minikube   1/1     Running   0             65s
-kube-system   kube-proxy-r7vv2                   1/1     Running   0             51s
-kube-system   kube-scheduler-minikube            1/1     Running   0             67s
-kube-system   storage-provisioner                1/1     Running   1 (21s ago)   64s
-```
 
 
 
 ## Application Signals 有効
 
-![alt text](image.png)
+[CloudWatch](https://ap-northeast-1.console.aws.amazon.com/cloudwatch/home?region=ap-northeast-1#application-signals:services) 画面から、左ペインの **Application Signals** → **サービス** を選択します。  
+初回アクセス時には以下のボタンが表示されます。**サービスの検出を開始** をクリックしてください。  
 
-![alt text](image-1.png)
+![alt text](./imgs/chap1_enable.png)
 
+
+自分のアカウントでこのステップを初めて完了すると、**AWSServiceRoleForCloudWatchApplicationSignals** サービスリンクロールが作成されます。
+このロールの詳細については、[CloudWatch Application Signals のサービスリンクロールのアクセス許可](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/using-service-linked-roles.html#service-linked-role-signals) を参照してください。  
 
