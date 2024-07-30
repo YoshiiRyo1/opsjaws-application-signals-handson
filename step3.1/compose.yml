@@ -37,11 +37,17 @@ services:
     environment:
       - AD_SERVICE_PORT
       - FLAGD_HOST
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}/v1/traces
+      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}/v1/logs
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_LOGS_EXPORTER=otlp
       - OTEL_SERVICE_NAME=adservice
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
+      - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
+      - OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT=http://cw-agent:4316/v1/metrics
     depends_on:
       otelcol:
         condition: service_started
@@ -274,8 +280,6 @@ services:
         condition: service_started
       loadgenerator:
         condition: service_started
-      grafana:
-        condition: service_started
 
   # Imageprovider
   imageprovider:
@@ -446,12 +450,18 @@ services:
       - FLAGD_HOST
       - RECOMMENDATION_SERVICE_PORT
       - PRODUCT_CATALOG_SERVICE_ADDR
-      - OTEL_PYTHON_LOG_CORRELATION=true
-      - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_SERVICE_NAME=recommendationservice
       - PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
+      - OTEL_PYTHON_DISTRO=aws_distro
+      - OTEL_PYTHON_CONFIGURATOR=aws_configurator
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
+      - OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT=http://cw-agent:4316/v1/metrics
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}/v1/traces
     depends_on:
       productcatalogservice:
         condition: service_started

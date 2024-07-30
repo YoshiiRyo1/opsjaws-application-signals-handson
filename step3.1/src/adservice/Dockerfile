@@ -24,8 +24,10 @@ ARG version=2.6.0
 WORKDIR /usr/src/app/
 
 COPY --from=builder /usr/src/app/ ./
-ADD --chmod=644 https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v$version/opentelemetry-javaagent.jar /usr/src/app/opentelemetry-javaagent.jar
-ENV JAVA_TOOL_OPTIONS=-javaagent:/usr/src/app/opentelemetry-javaagent.jar
+#ADD --chmod=644 https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v$version/opentelemetry-javaagent.jar /usr/src/app/opentelemetry-javaagent.jar
+#ENV JAVA_TOOL_OPTIONS=-javaagent:/usr/src/app/opentelemetry-javaagent.jar
+ADD --chmod=644 https://github.com/aws-observability/aws-otel-java-instrumentation/releases/download/v1.32.3/aws-opentelemetry-agent.jar /usr/src/app/aws-opentelemetry-agent.jar
+ENV JAVA_TOOL_OPTIONS=-javaagent:/usr/src/app/aws-opentelemetry-agent.jar
 
 EXPOSE ${AD_SERVICE_PORT}
 ENTRYPOINT [ "./build/install/opentelemetry-demo-ad-service/bin/AdService" ]
