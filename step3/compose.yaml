@@ -1,0 +1,81 @@
+services:
+  pet-search:
+    build: .
+    environment:
+      - AWS_REGION=ap-northeast-1
+      - AWS_ACCESS_KEY=dummyaccess
+      - AWS_SECRET_KEY=dummysecret
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=PetSearch,aws.log.group.names=petseach
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4316/v1/traces
+      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://adot:4318/v1/logs
+      - OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT=http://cw-agent:4316/v1/metrics
+      - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
+      - OTEL_TRACES_SAMPLER=always_on
+      - JAVA_TOOL_OPTIONS="-javaagent:/app/aws-opentelemetry-agent.jar"
+    ports:
+      - "8080:80"
+    depends_on:
+      - setup
+      - cw-agent
+      - adot
+    entrypoint: /bin/sh -c
+    command: >
+      "
+        java -jar /app/app.jar \\
+          --cloud.aws.region.static="ap-northeast-1" \\
+          --aws.local.endpoint=http://localstack:4566
+      "
+
+  cw-agent:
+    image: public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest
+    volumes:
+      - ./cwagent.json:/etc/cwagentconfig
+    ports:
+      - 4316:4316
+
+  adot:
+    image: public.ecr.aws/aws-observability/aws-otel-collector:v0.40.0
+    command:
+      - --config=/etc/otel-config.yaml
+    volumes:
+      - ./otel-config.yaml:/etc/otel-config.yaml
+    ports:
+      - 4318:4318
+
+  localstack:
+    image: localstack/localstack:latest
+    environment:
+      - AWS_DEFAULT_REGION=ap-northeast-1
+      - EDGE_PORT=4566
+      - SERVICES=dynamodb,s3,ssm
+    ports:
+      - '4566:4566'
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./data}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  setup:
+    image: mesosphere/aws-cli
+    environment:
+      - AWS_ACCESS_KEY_ID=dummyaccess
+      - AWS_SECRET_ACCESS_KEY=dummysecret
+      - AWS_DEFAULT_REGION=ap-northeast-1
+    entrypoint: /bin/sh -c
+    command: >
+      "
+        sleep 10;
+        aws --endpoint-url=http://localstack:4566 s3 mb s3://petsearch;
+        aws --endpoint-url=http://localstack:4566 ssm put-parameter --name /petstore/dynamodbtablename --type String --value petsearch;
+        aws --endpoint-url=http://localstack:4566 ssm put-parameter --name /petstore/s3bucketname --type String --value petsearch;
+        aws --endpoint-url=http://localstack:4566 dynamodb create-table --table-name petsearch --key-schema AttributeName=petid,KeyType=HASH --attribute-definitions AttributeName=petid,AttributeType=S --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5;
+        aws --endpoint-url=http://localstack:4566 dynamodb put-item --table-name petsearch --item '{\"petid\":{\"S\":\"aaaa\"},\"pettype\":{\"S\":\"kitten\"},\"petcolor\":{\"S\":\"braun\"},\"availability\":{\"S\":\"now\"},\"cuteness_rate\":{\"S\":\"high\"},\"price\":{\"S\":\"200\"},\"image\":{\"S\":\"k1\"}}';
+        aws --endpoint-url=http://localstack:4566 dynamodb put-item --table-name petsearch --item '{\"petid\":{\"S\":\"bbbb\"},\"pettype\":{\"S\":\"bunny\"},\"petcolor\":{\"S\":\"black\"},\"availability\":{\"S\":\"now\"},\"cuteness_rate\":{\"S\":\"high\"},\"price\":{\"S\":\"150\"},\"image\":{\"S\":\"b1\"}}';
+        aws --endpoint-url=http://localstack:4566 dynamodb put-item --table-name petsearch --item '{\"petid\":{\"S\":\"cccc\"},\"pettype\":{\"S\":\"puppy\"},\"petcolor\":{\"S\":\"white\"},\"availability\":{\"S\":\"now\"},\"cuteness_rate\":{\"S\":\"high\"},\"price\":{\"S\":\"500\"},\"image\":{\"S\":\"p1\"}}';
+      "
+    depends_on:
+      - localstack

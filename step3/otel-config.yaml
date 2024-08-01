@@ -1,0 +1,26 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+processors:
+  batch:
+
+  memory_limiter:
+    limit_mib: 100
+    check_interval: 5s
+
+exporters:
+  awscloudwatchlogs:
+    log_group_name: "petsearch"
+    log_stream_name: "petsearch"
+    region: "ap-northeast-1"
+    log_retention: 7
+
+service:
+  pipelines:
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter,batch]
+      exporters: [awscloudwatchlogs]

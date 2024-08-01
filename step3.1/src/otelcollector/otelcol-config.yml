@@ -1,0 +1,52 @@
+# Copyright The OpenTelemetry Authors
+# SPDX-License-Identifier: Apache-2.0
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: ${env:OTEL_COLLECTOR_HOST}:${env:OTEL_COLLECTOR_PORT_GRPC}
+      http:
+        endpoint: ${env:OTEL_COLLECTOR_HOST}:${env:OTEL_COLLECTOR_PORT_HTTP}
+        cors:
+          allowed_origins:
+            - "http://*"
+            - "https://*"
+
+exporters:
+  debug:
+  otlphttp:
+    endpoint: http://cw-agent:4316
+
+  awscloudwatchlogs:
+    log_group_name: "oteldemo"
+    log_stream_name: "app"
+    region: "ap-northeast-1"
+    log_retention: 7
+
+
+processors:
+  batch:
+  transform:
+    error_mode: ignore
+    trace_statements:
+      - context: span
+        statements:
+          # could be removed when https://github.com/vercel/next.js/pull/64852 is fixed upstream
+          - replace_pattern(name, "\\?.*", "")
+          - replace_match(name, "GET /api/products/*", "GET /api/products/{productId}")
+
+connectors:
+  spanmetrics:
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [transform, batch]
+      exporters: [otlphttp, debug]
+
+    logs:
+      receivers: [otlp]
+      processors: [transform, batch]
+      exporters: [awscloudwatchlogs]

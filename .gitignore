@@ -25,6 +25,7 @@ override.tf.json
 
 # Include override files you do wish to add to version control using negated pattern
 # !example_override.tf
+.terraform.lock.hcl
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
@@ -32,3 +33,71 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Mac
+.DS_Store
+
+# local env files
+.envrc
+credentials
+step3/data/
+
+# Opentelemetry Demo
+*~
+*.iml
+*.ipr
+*.iws
+*.pyc
+.nb-gradle
+.nb-gradle-properties
+.swp
+.DS_Store
+\#*\#
+
+docker-compose.override.yml
+
+# Eclipse
+.classpath
+.project
+.settings
+
+bin/
+obj/
+.vs/
+.vscode
+.gradle/
+.idea/
+build/
+node_modules/
+coverage
+.next/
+out/
+build
+next-env.d.ts
+vendor/
+composer.lock
+.venv
+.dockerhub.env
+.ghcr.env
+
+src/frontend/cypress/videos
+src/frontend/cypress/screenshots
+src/shippingservice/target/
+test/tracetesting/tracetesting-vars.yaml
+
+# Ignore copied/generated protobuf files
+step3.1/src/cartservice/src/protos/
+step3.1/src/featureflagservice/proto/
+step3.1/src/featureflagservice/src/ffs_demo_pb.erl
+step3.1/src/featureflagservice/src/ffs_service_*.erl
+step3.1/src/featureflagservice/src/oteldemo_*.erl
+step3.1/src/frauddetectionservice/src/main/proto
+step3.1/src/frontend/pb/
+step3.1/src/frontend/protos/
+step3.1/src/paymentservice/demo.proto
+step3.1/src/recommendationservice/demo_pb2*.py
+step3.1/src/shippingservice/proto/
+step3.1/src/productcatalogservice/genproto
+step3.1/src/currencyservice/proto
+step3.1/src/checkoutservice/genproto
+step3.1/src/accountingservice/genproto
