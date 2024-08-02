@@ -41,6 +41,7 @@ terraform.rc
 .envrc
 credentials
 step3/data/
+chapter3/data/
 
 # Opentelemetry Demo
 *~
