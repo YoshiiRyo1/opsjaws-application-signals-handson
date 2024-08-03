@@ -11,7 +11,7 @@ terraform {
 // Configure the AWS Provider
 provider "aws" {
   region  = "ap-northeast-1"
-  profile = "yoshii-apphandson"
+  # profile = "xxxxxxxxx"     # 必要に応じて任意のプロファイル名を設定してください 
 
 
   default_tags {
