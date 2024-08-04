@@ -1,7 +1,6 @@
 locals {
   vpc_cidr_block    = "10.30.0.0/16"
   subnet_cidr_block = "10.30.30.0/24"
-
 }
 
 
@@ -49,9 +48,9 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-// IAM Role for Cloud9
-resource "aws_iam_role" "cloud9" {
-  name = "cloud9-handson-role"
+// IAM Role for EC2
+resource "aws_iam_role" "ec2" {
+  name = "ec2-handson-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -66,22 +65,30 @@ resource "aws_iam_role" "cloud9" {
   })
 
   managed_policy_arns = [
-    "arn:aws:iam::aws:policy/IAMFullAccess",
-    "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
-    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess",
+    "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy",
+    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   ]
 }
 
-resource "aws_iam_instance_profile" "cloud9" {
-  name = "cloud9-handson-profile"
-  role = aws_iam_role.cloud9.name
+resource "aws_iam_instance_profile" "ec2" {
+  name = "ec2-handson-profile"
+  role = aws_iam_role.ec2.name
 }
 
-// Cloud9 Environment
-resource "aws_cloud9_environment_ec2" "main" {
+// Handson Instance
+resource "aws_instance" "main" {
   instance_type               = "m5.large"
-  name                        = "opsjaws-handson"
-  image_id                    = "amazonlinux-2023-x86_64"
-  automatic_stop_time_minutes = 30
+  ami                         = "ami-0c865e0f6120c0c63"  # Amazon ECS-Optimized Amazon Linux 2023 (AL2023) x86_64 AMI
   subnet_id                   = aws_subnet.public.id
+  iam_instance_profile        = aws_iam_instance_profile.ec2.name
+}
+
+resource "aws_cloudwatch_log_group" "dice-server" {
+  name              = "dice-server"
+  retention_in_days = 1
+}
+
+resource "aws_cloudwatch_log_group" "petseach" {
+  name              = "petseach"
+  retention_in_days = 1
 }
