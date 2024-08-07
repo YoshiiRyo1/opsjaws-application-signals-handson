@@ -1,0 +1,9 @@
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/VisitsServiceClient.java
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/dto/PetDetails.java
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/dto/Visits.java
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/dto/VisitDetails.java
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/dto/OwnerDetails.java
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/ApiGatewayApplication.java
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/CustomersServiceClient.java
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/dto/PetType.java
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/boundary/web/ApiGatewayController.java

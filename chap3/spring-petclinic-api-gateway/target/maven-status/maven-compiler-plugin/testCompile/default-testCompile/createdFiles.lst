@@ -1,0 +1,4 @@
+org/springframework/samples/petclinic/api/application/VisitsServiceClientIntegrationTest.class
+org/springframework/samples/petclinic/api/ApiGatewayApplicationTests.class
+org/springframework/samples/petclinic/api/boundary/web/CircuitBreakerConfiguration.class
+org/springframework/samples/petclinic/api/boundary/web/ApiGatewayControllerTest.class
