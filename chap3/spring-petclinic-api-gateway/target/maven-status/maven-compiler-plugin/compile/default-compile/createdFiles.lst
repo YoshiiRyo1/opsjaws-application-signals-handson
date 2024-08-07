@@ -1,0 +1,9 @@
+org/springframework/samples/petclinic/api/dto/OwnerDetails.class
+org/springframework/samples/petclinic/api/ApiGatewayApplication.class
+org/springframework/samples/petclinic/api/application/CustomersServiceClient.class
+org/springframework/samples/petclinic/api/dto/VisitDetails.class
+org/springframework/samples/petclinic/api/dto/Visits.class
+org/springframework/samples/petclinic/api/application/VisitsServiceClient.class
+org/springframework/samples/petclinic/api/dto/PetDetails.class
+org/springframework/samples/petclinic/api/dto/PetType.class
+org/springframework/samples/petclinic/api/boundary/web/ApiGatewayController.class

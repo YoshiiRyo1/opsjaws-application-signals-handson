@@ -1,0 +1,7 @@
+org/springframework/samples/petclinic/visits/web/VisitResource.class
+org/springframework/samples/petclinic/visits/web/VisitResource$Visits.class
+org/springframework/samples/petclinic/visits/model/Visit.class
+org/springframework/samples/petclinic/visits/VisitsServiceApplication.class
+org/springframework/samples/petclinic/visits/model/VisitRepository.class
+org/springframework/samples/petclinic/visits/model/Visit$VisitBuilder.class
+org/springframework/samples/petclinic/visits/config/MetricConfig.class

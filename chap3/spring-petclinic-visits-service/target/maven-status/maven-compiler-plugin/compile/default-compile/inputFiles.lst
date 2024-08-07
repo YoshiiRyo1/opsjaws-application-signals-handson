@@ -1,0 +1,5 @@
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/web/VisitResource.java
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/model/VisitRepository.java
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/VisitsServiceApplication.java
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/model/Visit.java
+/home/ec2-user/environment/opsjaws-application-signals-handson/chap3/spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/config/MetricConfig.java
