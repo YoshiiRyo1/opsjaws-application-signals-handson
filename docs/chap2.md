@@ -21,11 +21,14 @@ adot は、[AWS Distro for OpenTelemetry Collector](https://aws-otel.github.io/d
 
 ## dice のビルド
 
-クローンしたリポジトリの `step2` ディレクトリに移動します。  
+クローンしたリポジトリの `chap2` ディレクトリに移動します。  
+```bash
+$ cd chap2
+```
+
 `build` コマンドでアプリケーションをビルドします。  
 
 ```bash
-$ cd step2
 $ docker compose build
 ```
 
@@ -38,10 +41,6 @@ $ docker compose build
 ```bash
 $ docker compose up -d
 $ docker compose ps -a
-NAME               IMAGE                                                         COMMAND                                                                SERVICE    CREATED         STATUS         PORTS
-step2-adot-1       public.ecr.aws/aws-observability/aws-otel-collector:v0.40.0   "/awscollector --config=/etc/otel-config.yaml"                         adot       9 seconds ago   Up 8 seconds   2000/tcp, 4317/tcp, 55681/tcp, 0.0.0.0:4318->4318/tcp, :::4318->4318/tcp
-step2-app-1        step2-app                                                     "/usr/bin/java -jar /app/build/libs/app.jar"                           app        9 seconds ago   Up 8 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp
-step2-cw-agent-1   public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest       "/opt/aws/amazon-cloudwatch-agent/bin/start-amazon-cloudwatch-agent"   cw-agent   9 seconds ago   Up 8 seconds   0.0.0.0:4316->4316/tcp, :::4316->4316/tcp
 ## STATUS が全て Up になっていることを確認
 ```
 
