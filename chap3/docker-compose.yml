@@ -1,0 +1,206 @@
+services:
+  config-server:
+    image: springcommunity/spring-petclinic-config-server
+    container_name: config-server
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    healthcheck:
+      test: [ "CMD", "curl", "-I", "http://config-server:8888" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 8888:8888
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=config-server
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4315
+      - OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT=http://cw-agent:4315
+      - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
+      - OTEL_TRACES_SAMPLER=always_on
+      - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
+
+  discovery-server:
+    image: springcommunity/spring-petclinic-discovery-server
+    container_name: discovery-server
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://discovery-server:8761" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    depends_on:
+      config-server:
+        condition: service_healthy
+    ports:
+      - 8761:8761
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=discovery-server
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4315
+      - OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT=http://cw-agent:4315
+      - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
+      - OTEL_TRACES_SAMPLER=always_on
+      - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
+
+  customers-service:
+    image: springcommunity/spring-petclinic-customers-service
+    container_name: customers-service
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+    ports:
+      - 8081:8081
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=customers-server
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4315
+      - OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT=http://cw-agent:4315
+      - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
+      - OTEL_TRACES_SAMPLER=always_on
+      - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
+
+  visits-service:
+    image: springcommunity/spring-petclinic-visits-service
+    container_name: visits-service
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+    ports:
+      - 8082:8082
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=visits-server
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4315
+      - OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT=http://cw-agent:4315
+      - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
+      - OTEL_TRACES_SAMPLER=always_on
+      - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
+
+  vets-service:
+    image: springcommunity/spring-petclinic-vets-service
+    container_name: vets-service
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+    ports:
+      - 8083:8083
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=vets-server
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4315
+      - OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT=http://cw-agent:4315
+      - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
+      - OTEL_TRACES_SAMPLER=always_on
+      - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
+
+  api-gateway:
+    image: springcommunity/spring-petclinic-api-gateway
+    container_name: api-gateway
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+    ports:
+      - 8080:8080
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=api-gateway
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4315
+      - OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT=http://cw-agent:4315
+      - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
+      - OTEL_TRACES_SAMPLER=always_on
+      - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
+
+  tracing-server:
+    image: openzipkin/zipkin
+    container_name: tracing-server
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    environment:
+      - JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -Djava.security.egd=file:/dev/./urandom
+    ports:
+      - 127.0.0.1:9411:9411
+
+  admin-server:
+    image: springcommunity/spring-petclinic-admin-server
+    container_name: admin-server
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+    ports:
+      - 9090:9090
+
+  ## Jmeter
+  jmeter:
+    build: ./docker/jmeter
+    container_name: jmeter
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    depends_on:
+      - api-gateway
+    environment:
+      - JVM_ARGS=-Xms256m -Xmx256m
+    volumes:
+      - ./docker/jmeter/petclinic_test_plan.jmx:/jmeter/plan.jmx
+      - ./data:/data
+    command: sleep 180 && jmeter -n -t /jmeter/plan.jmx -l /data/results.jtl
+
+  ## CW-Agent
+  cw-agent:
+    image: public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest
+    volumes:
+      - ./cwagent.json:/etc/cwagentconfig
+    ports:
+      - 4315:4315
+      - 4316:4316

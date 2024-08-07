@@ -40,7 +40,9 @@ terraform.rc
 # local env files
 .envrc
 credentials
-step3/data/
+chapter3/data/
+chapter3/*/target/
+
 
 # Opentelemetry Demo
 *~
@@ -85,19 +87,3 @@ src/frontend/cypress/screenshots
 src/shippingservice/target/
 test/tracetesting/tracetesting-vars.yaml
 
-# Ignore copied/generated protobuf files
-step3.1/src/cartservice/src/protos/
-step3.1/src/featureflagservice/proto/
-step3.1/src/featureflagservice/src/ffs_demo_pb.erl
-step3.1/src/featureflagservice/src/ffs_service_*.erl
-step3.1/src/featureflagservice/src/oteldemo_*.erl
-step3.1/src/frauddetectionservice/src/main/proto
-step3.1/src/frontend/pb/
-step3.1/src/frontend/protos/
-step3.1/src/paymentservice/demo.proto
-step3.1/src/recommendationservice/demo_pb2*.py
-step3.1/src/shippingservice/proto/
-step3.1/src/productcatalogservice/genproto
-step3.1/src/currencyservice/proto
-step3.1/src/checkoutservice/genproto
-step3.1/src/accountingservice/genproto
