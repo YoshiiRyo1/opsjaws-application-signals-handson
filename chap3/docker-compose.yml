@@ -22,7 +22,8 @@ services:
       - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
       - OTEL_TRACES_SAMPLER=always_on
       - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
-      
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
+
   discovery-server:
     image: springcommunity/spring-petclinic-discovery-server
     container_name: discovery-server
@@ -49,6 +50,7 @@ services:
       - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
       - OTEL_TRACES_SAMPLER=always_on
       - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
 
   customers-service:
     image: springcommunity/spring-petclinic-customers-service
@@ -73,6 +75,7 @@ services:
       - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
       - OTEL_TRACES_SAMPLER=always_on
       - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
 
   visits-service:
     image: springcommunity/spring-petclinic-visits-service
@@ -97,6 +100,7 @@ services:
       - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
       - OTEL_TRACES_SAMPLER=always_on
       - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
 
   vets-service:
     image: springcommunity/spring-petclinic-vets-service
@@ -121,6 +125,7 @@ services:
       - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
       - OTEL_TRACES_SAMPLER=always_on
       - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
 
   api-gateway:
     image: springcommunity/spring-petclinic-api-gateway
@@ -145,6 +150,7 @@ services:
       - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
       - OTEL_TRACES_SAMPLER=always_on
       - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
 
   tracing-server:
     image: openzipkin/zipkin
@@ -156,7 +162,7 @@ services:
     environment:
       - JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -Djava.security.egd=file:/dev/./urandom
     ports:
-      - 9411:9411
+      - 127.0.0.1:9411:9411
 
   admin-server:
     image: springcommunity/spring-petclinic-admin-server
@@ -173,7 +179,6 @@ services:
     ports:
       - 9090:9090
 
-
   ## Jmeter
   jmeter:
     build: ./docker/jmeter
@@ -189,7 +194,7 @@ services:
     volumes:
       - ./docker/jmeter/petclinic_test_plan.jmx:/jmeter/plan.jmx
       - ./data:/data
-    command: jmeter -n -t /jmeter/plan.jmx -l /data/results.jtl
+    command: sleep 180 && jmeter -n -t /jmeter/plan.jmx -l /data/results.jtl
 
   ## CW-Agent
   cw-agent:
@@ -199,25 +204,3 @@ services:
     ports:
       - 4315:4315
       - 4316:4316
-
-  ## Grafana / Prometheus
-
-  grafana-server:
-    build: ./docker/grafana
-    container_name: grafana-server
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-    ports:
-      - 3000:3000
-
-  prometheus-server:
-    build: ./docker/prometheus
-    container_name: prometheus-server
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-    ports:
-      - 9091:9090
