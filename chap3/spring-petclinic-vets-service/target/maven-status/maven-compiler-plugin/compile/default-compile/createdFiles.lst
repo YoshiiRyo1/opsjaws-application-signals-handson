@@ -1,9 +1,0 @@
-META-INF/spring-configuration-metadata.json
-org/springframework/samples/petclinic/vets/web/VetResource.class
-org/springframework/samples/petclinic/vets/model/Specialty.class
-org/springframework/samples/petclinic/vets/system/CacheConfig.class
-org/springframework/samples/petclinic/vets/system/VetsProperties$Cache.class
-org/springframework/samples/petclinic/vets/system/VetsProperties.class
-org/springframework/samples/petclinic/vets/VetsServiceApplication.class
-org/springframework/samples/petclinic/vets/model/VetRepository.class
-org/springframework/samples/petclinic/vets/model/Vet.class
