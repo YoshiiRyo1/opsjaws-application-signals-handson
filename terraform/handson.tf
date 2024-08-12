@@ -67,7 +67,10 @@ resource "aws_iam_role" "ec2" {
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy",
     "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
-    "arn:aws:iam::aws:policy/CloudWatchSyntheticsFullAccess"
+    "arn:aws:iam::aws:policy/CloudWatchSyntheticsFullAccess",
+    "arn:aws:iam::aws:policy/IAMFullAccess",
+    "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+    "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess",
   ]
 }
 
@@ -89,8 +92,8 @@ resource "aws_security_group" "main" {
 
 resource "aws_vpc_security_group_ingress_rule" "http" {
   security_group_id = aws_security_group.main.id
-  from_port         = 80
-  to_port           = 80
+  from_port         = 8080
+  to_port           = 8080
   ip_protocol       = "tcp"
   cidr_ipv4         = "0.0.0.0/0"
 }
@@ -119,6 +122,6 @@ resource "aws_cloudwatch_log_group" "dice-server" {
 }
 
 resource "aws_cloudwatch_log_group" "petseach" {
-  name              = "petseach"
+  name              = "petclinic"
   retention_in_days = 1
 }

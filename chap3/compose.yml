@@ -14,7 +14,7 @@ services:
     ports:
       - 8888:8888
     environment:
-      - OTEL_RESOURCE_ATTRIBUTES=service.name=config-server
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=config-server,aws.log.group.names=petclinic
       - OTEL_METRICS_EXPORTER=none
       - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
       - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4315
@@ -22,6 +22,8 @@ services:
       - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
       - OTEL_TRACES_SAMPLER=always_on
       - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://adot:4317
       - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
 
   discovery-server:
@@ -42,7 +44,7 @@ services:
     ports:
       - 8761:8761
     environment:
-      - OTEL_RESOURCE_ATTRIBUTES=service.name=discovery-server
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=discovery-server,aws.log.group.names=petclinic
       - OTEL_METRICS_EXPORTER=none
       - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
       - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4315
@@ -50,6 +52,8 @@ services:
       - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
       - OTEL_TRACES_SAMPLER=always_on
       - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://adot:4317
       - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
 
   customers-service:
@@ -67,7 +71,7 @@ services:
     ports:
       - 8081:8081
     environment:
-      - OTEL_RESOURCE_ATTRIBUTES=service.name=customers-server
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=customers-server,aws.log.group.names=petclinic
       - OTEL_METRICS_EXPORTER=none
       - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
       - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4315
@@ -75,6 +79,8 @@ services:
       - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
       - OTEL_TRACES_SAMPLER=always_on
       - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://adot:4317
       - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
 
   visits-service:
@@ -92,7 +98,7 @@ services:
     ports:
       - 8082:8082
     environment:
-      - OTEL_RESOURCE_ATTRIBUTES=service.name=visits-server
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=visits-server,aws.log.group.names=petclinic
       - OTEL_METRICS_EXPORTER=none
       - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
       - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4315
@@ -100,6 +106,8 @@ services:
       - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
       - OTEL_TRACES_SAMPLER=always_on
       - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://adot:4317
       - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
 
   vets-service:
@@ -117,7 +125,7 @@ services:
     ports:
       - 8083:8083
     environment:
-      - OTEL_RESOURCE_ATTRIBUTES=service.name=vets-server
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=vets-server,aws.log.group.names=petclinic
       - OTEL_METRICS_EXPORTER=none
       - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
       - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4315
@@ -125,6 +133,8 @@ services:
       - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
       - OTEL_TRACES_SAMPLER=always_on
       - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://adot:4317
       - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
 
   api-gateway:
@@ -142,7 +152,7 @@ services:
     ports:
       - 8080:8080
     environment:
-      - OTEL_RESOURCE_ATTRIBUTES=service.name=api-gateway
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=api-gateway,aws.log.group.names=petclinic
       - OTEL_METRICS_EXPORTER=none
       - OTEL_PROPAGATORS=xray,tracecontext,baggage,b3
       - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://cw-agent:4315
@@ -150,6 +160,8 @@ services:
       - OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true
       - OTEL_TRACES_SAMPLER=always_on
       - JAVA_TOOL_OPTIONS="-javaagent:/application/aws-opentelemetry-agent.jar"
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://adot:4317
       - MANAGEMENT.ZIPKIN.TRACING.ENDPOINT=http://tracing-server:9411/api/v2/spans
 
   tracing-server:
@@ -204,3 +216,13 @@ services:
     ports:
       - 4315:4315
       - 4316:4316
+
+  ## ADOT
+  adot:
+    image: public.ecr.aws/aws-observability/aws-otel-collector:v0.40.0
+    command:
+      - --config=/etc/otel-config.yaml
+    volumes:
+      - ./otel-config.yaml:/etc/otel-config.yaml
+    ports:
+      - 4317:4317
