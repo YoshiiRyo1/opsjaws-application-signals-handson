@@ -106,6 +106,9 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
         - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
         - arn:aws:iam::aws:policy/CloudWatchSyntheticsFullAccess
+        - arn:aws:iam::aws:policy/IAMFullAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
 
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -124,5 +127,5 @@ Resources:
   LogGroupPet:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: "petseach"
+      LogGroupName: "petclinic"
       RetentionInDays: 1
