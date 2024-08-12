@@ -2,5 +2,21 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <!-- Required for Loglevel managment into the Spring Petclinic Admin Server-->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+        <pattern>%d{HH:mm:ss.SSS} trace_id=%X{AWS-XRAY-TRACE-ID} span_id=%X{span_id} trace_flags=%X{trace_flags} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Just wrap your logging appender, for example ConsoleAppender, with OpenTelemetryAppender -->
+    <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.mdc.v1_0.OpenTelemetryAppender">
+    </appender>
+
+    <!-- Use the wrapped "OTEL" appender instead of the original "CONSOLE" one -->
+    <root level="DEBUG">
+        <appender-ref ref="console"/>
+        <appender-ref ref="OTEL"/>
+    </root>
+
     <jmxConfigurator/>
 </configuration>
