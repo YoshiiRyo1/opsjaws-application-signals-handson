@@ -13,6 +13,17 @@ Docker イメージをビルドします。
 
 ```bash
 $  ./mvnw clean install -PbuildDocker 
+(出力省略)
+[INFO] spring-petclinic-microservices ..................... SUCCESS [  0.346 s]
+[INFO] spring-petclinic-admin-server ...................... SUCCESS [ 17.074 s]
+[INFO] spring-petclinic-customers-service ................. SUCCESS [ 23.000 s]
+[INFO] spring-petclinic-vets-service ...................... SUCCESS [ 17.259 s]
+[INFO] spring-petclinic-visits-service .................... SUCCESS [ 16.376 s]
+[INFO] spring-petclinic-config-server ..................... SUCCESS [ 12.739 s]
+[INFO] spring-petclinic-discovery-server .................. SUCCESS [ 22.525 s]
+[INFO] spring-petclinic-api-gateway ....................... SUCCESS [ 31.931 s]
+## 全て SUCCESS になっていることを確認
+(出力省略)
 ```
 
 
@@ -27,6 +38,17 @@ $ docker compose ps -a
 ```
 
 5分待ちます。  
+
+
+## Synthetic Canary の実行
+
+```bash
+$ TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` 
+$ ENDPOINT=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4)
+
+$ 
+```
+
 
 
 ## Application Insights の確認

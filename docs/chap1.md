@@ -18,7 +18,7 @@
     - CloudWatchAgentServerPolicy
 - セキュリティグループ
   - 1つ
-  - インバウンドはルール無し
+  - インバウンドは TCP 80 を許可
   - アウトバウンドは全て許可
 - EC2 インスタンス
   - 1台
@@ -34,16 +34,62 @@
   - グループ名 -> petseach
 
 
-Terraform も用意しています。[こちら](../terraform)。  
-手動でも Terraform でもお好きな方法で作成してください。  
+Terraform も用意しています。[Terraform](../terraform)。  
+CloudFormation も用意ｓちえます。 [CloudFormation](../cloudformation)。
+手動でも Terraform でも CloudFormatin でもお好きな方法で作成してください。  
+
+## EC2 インスタンスへのログイン
+
+Session Manager でログインしてください。  
+
 
 ## リポジトリのクローン
 
 作成した EC2 インスタンスに、ここのリポジトリをクローンしてください。  
 
+```bash
+$ cd ~
+$ bash
+$ sudo dnf install git -y
+
+$ git clone https://github.com/YoshiiRyo1/opsjaws-application-signals-handson.git
+$ cd opsjaws-application-signals-handson
+$ ls
+```
+
+## Maven インストール
+
+```bash
+$ sudo dnf -y install java-17-amazon-corretto-devel maven
+
+$ java --version
+openjdk 17.0.12 2024-07-16 LTS  # 17.x.x が表示されること
+OpenJDK Runtime Environment Corretto-17.0.12.7.1 (build 17.0.12+7-LTS)    # 17.x.x が表示されること
+OpenJDK 64-Bit Server VM Corretto-17.0.12.7.1 (build 17.0.12+7-LTS, mixed mode, sharing)    # 17.x.x が表示されること
+
+$ mvn --version
+Apache Maven 3.8.4 (Red Hat 3.8.4-3.amzn2023.0.5)    # 3.x.xが表示されること
+```
+
 ## Docker Compose インストール
 
+```bash
+$ sudo mkdir -p /usr/local/lib/docker/cli-plugins
+$ sudo curl -L "https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
+$ sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+$ docker compose version
+Docker Compose version v2.29.1    # v2.29.1 が表示されること
+```
 
+## Sudo なしで Docker コマンドを実行
+
+``` bash
+$ sudo gpasswd -a $(whoami) docker
+$ sudo chgrp docker /var/run/docker.sock
+$ sudo service docker restart
+```
+
+上記コマンドを実行したら、一度 Session Manager からログアウトして再度ログインしてください。  
 
 
 ## Application Signals 有効
