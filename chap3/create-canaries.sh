@@ -183,10 +183,7 @@ echo "ACCOUNT_ID is $ACCOUNT_ID"
 
 declare -a canaries=(
     "pc-add-visit"
-    "pc-create-owners"
-    "pc-visit-pet"
     "pc-visit-vet"
-    "pet-clinic-traffic"
     "pc-visit-insurances"
     "pc-visit-billings"
 )
