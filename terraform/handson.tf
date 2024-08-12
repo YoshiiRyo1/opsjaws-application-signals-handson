@@ -109,7 +109,7 @@ resource "aws_instance" "main" {
   iam_instance_profile = aws_iam_instance_profile.ec2.name
 
   tags = {
-    "name" = "opsjaws_handson"
+    "Name" = "opsjaws_handson"
   }
 }
 
