@@ -130,7 +130,7 @@ create_canary() {
       ENDPOINT="$NGINX_ENDPOINT"
     else
       TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` 
-      ENDPOINT=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4)
+      ENDPOINT="http://$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4):8080"
     fi
     if [ -z "$ENDPOINT" ]; then
       echo "Fail to get a valid endpoint. Endpoint is empty. Exit the script"

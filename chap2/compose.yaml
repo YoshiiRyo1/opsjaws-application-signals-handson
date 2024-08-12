@@ -19,6 +19,7 @@ services:
 
   cw-agent:
     image: public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest
+    container_name: cw-agent
     volumes:
       - ./cwagent.json:/etc/cwagentconfig
     ports:
@@ -26,6 +27,7 @@ services:
 
   adot:
     image: public.ecr.aws/aws-observability/aws-otel-collector:v0.40.0
+    container_name: adot
     command:
       - --config=/etc/otel-config.yaml
     volumes:
