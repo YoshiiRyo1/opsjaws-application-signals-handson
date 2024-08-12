@@ -2,6 +2,14 @@
 
 Chapter 3では複数のマイクロサービスのシグナルを受信し、そのなかから SLO を定義します。  
 
+このハンズオンは [spring-petclinic-microservices](https://github.com/spring-petclinic/spring-petclinic-microservices/tree/main) のソースコードを利用しています。  
+複数のマイクロサービスから成り立っており、かつ、Java アプリケーションということで OpenTelemetry (今回は Application Signals) のデモを行うのに適したものだと思っています。  
+
+マイクロサービスの構成は本家のリポジトリにある通りです。  
+※ 右側の Zipkin は無効にしています。  
+
+![img](https://github.com/spring-petclinic/spring-petclinic-microservices/raw/main/docs/microservices-architecture-diagram.jpg)  
+
 ## マイクロサービスのビルド
 
 クローンしたリポジトリの `chap3` ディレクトリに移動します。  
@@ -40,21 +48,31 @@ $ docker compose ps -a
 5分待ちます。  
 
 
-## Synthetic Canary の実行
+## Synthetic Canary の作成
+
+作成したマイクロサービスに対して Synthetic Canary を作成します。  
+スクリプトを利用して作成します。  
 
 ```bash
 $ TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` 
-$ ENDPOINT=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4)
+$ ENDPOINT="http://$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4):8080"
 
-$ 
+$ chmod +x create-canaries.sh
+$ ./create-canaries.sh ap-northeast-1 create $ENDPOINT
 ```
-
-
 
 ## Application Insights の確認
 
 マネジメントコンソールの CloudWatch 画面から、左ペインの **X-Ray トレース** → **トレース** を選択します。  
 Chapter 2同様に複数個のトレースが確認できるはずです。  
+
+## Service Map の確認
+
+マネジメントコンソールの CloudWatch 画面から、左ペインの **Application Signals** → **Service Map** を選択します。  
+
+マイクロサービス間での通信が確認できます。ある一つのマイクロサービスをクリックすると、レイテンシー、リクエスト、障害(5xx) が表示され、問題箇所の特定に役立ちます。  
+
+![tracemap](./imgs/chap3_tracemap.png)
 
 ## SLI 表示
 
@@ -74,16 +92,17 @@ HTTP メソッドと API Endpoint の組み合わせでレイテンシー、リ�
 
 ![service_operations](./imgs/chap3_serviceoperation.png)  
 
-## SLO 作成
+## SLO 作成 〜 サービスオペレーション
 
 それでは SLO を作りましょう。  
+2通りの SLO を作成してみます。まずはサービスオペレーションから。  
 
 **サービスオペレーション** 画面のままです。  
 `PUT /owners/{ownerId}` の横の **SLO を作成** をクリックします。  
 
 ### 名称
 
-任意の名称を入力します。今回は「cutomer-put-owners」としました。  
+任意の名称を入力します。今回は「customer-put-owners」としました。  
 
 ![alt text](./imgs/chap3_slo_name.png)
 
@@ -122,6 +141,35 @@ CloudWatch アラームを設定します。説明不要かなと思います。
 
 ![alt text](./imgs/chap3_slo_alarm.png)
 
+
+## SLO 作成 〜 可用性
+
+サービスエンドポイントの可用性レベルを SLO として設定します。  
+
+マネジメントコンソールの CloudWatch 画面から、左ペインの **Application Signals** → **サービス** を選択します。  
+
+`アクション` から `SLO を作成` をクリックします。  
+
+SLO 名は `pet-clinic-canary` とします。(任意なので変更しても構いません。)  
+
+SLI は `CloudWatch メトリクス` を選択します。  
+
+メトリクスは以下を選択してください。  
+
+| 項目         | 設定値               |
+| ------------ | -------------------- |
+| 名前空間     | CloudWatchSynthetics |
+| メトリクス名 | SuccessPercent       |
+| CanaryName   | pc-visit-billings    |
+| StepName     | navigateToUrl        |
+
+条件は `90 よりも大きい` にします。  
+
+![alt text](./imgs/chap3_slo_availability.png)  
+
+<br />  
+他の項目はデフォルト値で進めます。  
+
 ## 様々な SLO
 
 前の手順を参考にして様々な SLO を作成してみましょう。  
@@ -135,6 +183,23 @@ CloudWatch アラームを設定します。説明不要かなと思います。
   - 30日ローリング、目標は99%
   - 365日ローリング、目標は99%
 
+## 状態の変化を観る
+
+10分以上経過するとデータが溜まります。  
+
+意図的に障害を起こし、SLO の状態が変化するのを観察してみましょう。  
+
+- セキュリティグループの 8080 を閉じてみる
+- EC2 インスタンスに負荷をかけてみる
+- マイクロサービスを1つ停止してみる (`docker compose down vets-service`)
+
+## Synthetic Canary の削除
+
+一通りの検証が完了したら Canary を削除します。  
+
+```bash
+$ ./create-canaries.sh ap-northeast-1 delete $ENDPOINT
+```
 
 ## コンテナ停止
 

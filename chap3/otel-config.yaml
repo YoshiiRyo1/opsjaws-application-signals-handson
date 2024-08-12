@@ -14,7 +14,7 @@ processors:
 exporters:
   awscloudwatchlogs:
     log_group_name: "petclinic"
-    log_stream_name: "dice"
+    log_stream_name: "app"
     region: "ap-northeast-1"
     log_retention: 1
 
