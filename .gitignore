@@ -40,8 +40,8 @@ terraform.rc
 # local env files
 .envrc
 credentials
-chapter3/data/
-chapter3/*/target/
+chap3/data/
+chap3/*/target/
 
 
 # Opentelemetry Demo
