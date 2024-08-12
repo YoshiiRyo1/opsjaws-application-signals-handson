@@ -9,7 +9,7 @@
     </appender>
 
     <!-- Just wrap your logging appender, for example ConsoleAppender, with OpenTelemetryAppender -->
-    <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.mdc.v1_0.OpenTelemetryAppender">
+    <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
     </appender>
 
     <!-- Use the wrapped "OTEL" appender instead of the original "CONSOLE" one -->
