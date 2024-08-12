@@ -13,6 +13,6 @@ WORKDIR /app
 COPY --from=builder /app/build/libs/ ./build/libs/
 COPY logback.xml ./logback.xml
 
-ADD https://github.com/aws-observability/aws-otel-java-instrumentation/releases/download/v1.32.5/aws-opentelemetry-agent.jar ./aws-opentelemetry-agent.jar
+ADD https://github.com/aws-observability/aws-otel-java-instrumentation/releases/download/v1.32.3/aws-opentelemetry-agent.jar ./aws-opentelemetry-agent.jar
 
 CMD ["/app/build/libs/app.jar"]
