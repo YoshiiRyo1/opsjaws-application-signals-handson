@@ -19,7 +19,7 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "public_subenet"
+    Name = "opsjaws_handson_public_subenet"
   }
 }
 
@@ -38,7 +38,7 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name = "public_route_table"
+    Name = "opsjaws_handson_public_route_table"
   }
 }
 
@@ -66,7 +66,8 @@ resource "aws_iam_role" "ec2" {
 
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy",
-    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+    "arn:aws:iam::aws:policy/CloudWatchSyntheticsFullAccess"
   ]
 }
 
@@ -75,12 +76,41 @@ resource "aws_iam_instance_profile" "ec2" {
   role = aws_iam_role.ec2.name
 }
 
+// Security Group
+resource "aws_security_group" "main" {
+  name        = "allow_http"
+  description = "opsjaws handson security group"
+  vpc_id      = aws_vpc.main.id
+
+  tags = {
+    Name = "opsjaws_handson_security_group"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "http" {
+  security_group_id = aws_security_group.main.id
+  from_port         = 80
+  to_port           = 80
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
+}
+
+resource "aws_vpc_security_group_egress_rule" "main" {
+  security_group_id = aws_security_group.main.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1"
+}
+
 // Handson Instance
 resource "aws_instance" "main" {
-  instance_type               = "m5.large"
-  ami                         = "ami-0c865e0f6120c0c63"  # Amazon ECS-Optimized Amazon Linux 2023 (AL2023) x86_64 AMI
-  subnet_id                   = aws_subnet.public.id
-  iam_instance_profile        = aws_iam_instance_profile.ec2.name
+  instance_type        = "m5.large"
+  ami                  = "ami-0c865e0f6120c0c63" # Amazon ECS-Optimized Amazon Linux 2023 (AL2023) x86_64 AMI
+  subnet_id            = aws_subnet.public.id
+  iam_instance_profile = aws_iam_instance_profile.ec2.name
+
+  tags = {
+    "name" = "opsjaws_handson"
+  }
 }
 
 resource "aws_cloudwatch_log_group" "dice-server" {
