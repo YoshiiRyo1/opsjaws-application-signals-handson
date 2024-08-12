@@ -212,7 +212,7 @@ services:
     volumes:
       - ./docker/jmeter/petclinic_test_plan.jmx:/jmeter/plan.jmx
       - ./data:/data
-    command: bash -c "sleep 180 && jmeter -n -t /jmeter/plan.jmx -l /data/results.jtl"
+    command: bash -c "sleep 120 && jmeter -n -t /jmeter/plan.jmx -l /data/results.jtl"
 
   ## CW-Agent
   cw-agent:

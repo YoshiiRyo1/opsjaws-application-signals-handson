@@ -24,7 +24,11 @@ chaos:
     enabled: true
     watcher:
       service: true
+      controller: true
+      restController: true
+      component: true
     assaults:
+      latencyActive: false
       exceptionsActive: true
       level: 1
 
