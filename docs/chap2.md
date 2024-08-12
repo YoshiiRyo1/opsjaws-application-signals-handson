@@ -23,7 +23,7 @@ adot は、[AWS Distro for OpenTelemetry Collector](https://aws-otel.github.io/d
 
 クローンしたリポジトリの `chap2` ディレクトリに移動します。  
 ```bash
-$ cd chap2
+$ cd ~/opsjaws-application-signals-handson/chap2
 ```
 
 `build` コマンドでアプリケーションをビルドします。  
@@ -46,15 +46,15 @@ $ docker compose ps -a
 
 ## リクエスト生成
 
-`load_generate.sh` を実行して、app にリクエストを送信します。1回実行で10リクエストを生成します。何度が実行してみてください。  
+`load_generate.sh` を実行して、app にリクエストを送信します。1回実行で1000リクエストを生成します。  
+リクエストが Application Signals に表示されるまで2~3分かかります。その間、何度が実行してみてください。  
 
 ```bash
 $ chmod +x load_generate.sh 
 $ ./load_generate.sh
-[5,3,6,1,6,2,4,1,5,3,5,5] ##ランダムな数字が12個 x 10回 表示されます
 ```
 
-## Application Insights の確認
+## シグナルの確認
 
 マネジメントコンソールの CloudWatch 画面から、左ペインの **X-Ray トレース** → **トレース** を選択します。  
 複数個のトレースが確認できるはずです。  
