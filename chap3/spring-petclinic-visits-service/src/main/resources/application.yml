@@ -11,3 +11,28 @@ spring:
     activate:
       on-profile: docker
     import: configserver:http://config-server:8888
+
+---
+spring:
+  config:
+    activate:
+      on-profile: chaos-monkey
+    import: configserver:http://config-server:8888
+
+chaos:
+  monkey:
+    enabled: true
+    watcher:
+      service: true
+    assaults:
+      exceptionsActive: true
+      level: 1
+
+management:
+  endpoint:
+    chaosmonkey:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
