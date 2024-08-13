@@ -31,7 +31,7 @@
 - CloudWatch Logs ロググループ
   - 2つ
   - グループ名 -> dice-server
-  - グループ名 -> petseach
+  - グループ名 -> petclinic
 
 
 Terraform も用意しています。[Terraform](../terraform)。  
