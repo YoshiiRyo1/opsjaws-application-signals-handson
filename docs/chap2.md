@@ -103,8 +103,6 @@ CloudWatch Logs を見てみます。
 
 ![metrics](./imgs/chap2_metrices.png)  
 
-
-
 ## コンテナ停止
 
 コンテナを停止します。  
@@ -112,5 +110,8 @@ CloudWatch Logs を見てみます。
 ```bash
 $ docker compose down
 ```
+
+## 解説
+
 
 

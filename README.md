@@ -8,7 +8,10 @@
 - [クリーンアップ](./docs/chap4.md)
 
 
-## このハンズオンについて
+## このコンテンツについて
+
+本コンテンツは AWS で SLO/SLI を観測し、システム全体の可観測性を向上させるマネージドサービス [Application Signals](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Application-Monitoring-Sections.html) の基礎を学ぶハンズオンです。  
+Application Signals がシグナルをどのように収集し、CloudWatch 上で表現するかを学びます。  
 
 
 ## ハンズオンの前提
