@@ -190,5 +190,5 @@ X Ray 画面でトレースを見た際に、ログも表示されていたこ�
 
 - ログにトレース ID を含める
 - ログを CloudWatch Logs に送信
-- `aws.log.group.names` でろぐグループを指定 
+- `aws.log.group.names` でロググループを指定 
 
