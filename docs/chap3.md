@@ -141,6 +141,7 @@ CloudWatch アラームを設定します。説明不要かなと思います。
 
 ![alt text](./imgs/chap3_slo_alarm.png)
 
+`SLO を作成` をクリックします。
 
 ## SLO 作成 〜 可用性
 
@@ -168,7 +169,7 @@ SLI は `CloudWatch メトリクス` を選択します。
 ![alt text](./imgs/chap3_slo_availability.png)  
 
 <br />  
-他の項目はデフォルト値で進めます。  
+他の項目はデフォルト値のまま作成します。  
 
 ## 様々な SLO
 
@@ -211,4 +212,3 @@ $ docker compose down
 ## Thanks
 
 このハンズオンは [spring-petclinic-microservices](https://github.com/spring-petclinic/spring-petclinic-microservices/tree/main) のマイクロサービス群を利用しています。ありがとうございます。  
-
