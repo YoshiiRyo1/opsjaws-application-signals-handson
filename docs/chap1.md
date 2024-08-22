@@ -6,6 +6,10 @@
 
 以下のリソースを作成してください。  
 
+[CloudFormation テンプレート](../cloudformation)を用意しているので、[ドキュメントの手順](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/cfn-console-create-stack.html) を参考にプロビジョニングしてください。
+
+[Terraform](../terraform) も用意しています。
+
 - VPC
   - 既存のものでも新規作成でも構いません
 - パブリックサブネット
@@ -33,15 +37,11 @@
   - グループ名 -> dice-server
   - グループ名 -> petclinic
 
-
-Terraform も用意しています。[Terraform](../terraform)。  
-CloudFormation も用意しています。 [CloudFormation](../cloudformation)。
-手動でも Terraform でも CloudFormatin でもお好きな方法で作成してください。  
-
 ## EC2 インスタンスへのログイン
 
-Session Manager でログインしてください。  
+Session Manager でログインしてください。
 
+[ログイン手順](https://docs.aws.amazon.com/ja_jp/systems-manager/latest/userguide/session-manager-working-with-sessions-start.html)
 
 ## ハンズオンの準備
 
@@ -73,4 +73,3 @@ $ ./chap1/setup.sh
 
 自分のアカウントでこのステップを初めて完了すると、**AWSServiceRoleForCloudWatchApplicationSignals** サービスリンクロールが作成されます。
 このロールの詳細については、[CloudWatch Application Signals のサービスリンクロールのアクセス許可](https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/using-service-linked-roles.html#service-linked-role-signals) を参照してください。  
-
