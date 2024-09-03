@@ -19,6 +19,7 @@ Application Signals がシグナルをどのように収集し、CloudWatch 上�
 - 自身が所有している AWS アカウントがあること
   - 本番環境ではないことが望ましい
 - AdministratorAccess 権限の持つ IAM ユーザー/ロールが使えること
+- 東京リージョンでの実施を想定
 
 ## AWS 公式ハンズオン
 
