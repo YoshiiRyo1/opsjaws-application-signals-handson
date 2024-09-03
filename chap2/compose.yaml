@@ -18,7 +18,7 @@ services:
       - JAVA_TOOL_OPTIONS="-javaagent:/app/aws-opentelemetry-agent.jar"
 
   cw-agent:
-    image: public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest
+    image: public.ecr.aws/cloudwatch-agent/cloudwatch-agent:1.300044.0b793
     container_name: cw-agent
     volumes:
       - ./cwagent.json:/etc/cwagentconfig
