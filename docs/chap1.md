@@ -4,7 +4,7 @@
 
 ## AWS リソースの作成
 
-以下のリソースを作成してください。  
+以下のリソースを作成してください。東京リージョンを想定しています。東京以外のリージョンを使用する場合は臨機応変に変更してください。    
 
 [CloudFormation テンプレート](../cloudformation)を用意しているので、[ドキュメントの手順](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/cfn-console-create-stack.html) を参考にプロビジョニングしてください。
 
