@@ -84,7 +84,7 @@ OpenTelemetry SDK、ADOT Java Agent、CloudWatch Agent によって付与され�
 <br />
 
 **dice-server** をクリックすると、サービスの健全性を測るために役立つメトリクスが表示されます。  
-特に `サービスオペレーター` タブに表示される情報は SLI として利用可能です。  
+特に `サービスオペレーション` タブに表示される情報は SLI として利用可能です。  
 
 ![applicationsignals](./imgs/chap2_service.png)  
 <br />
