@@ -19,3 +19,10 @@ CloudWatch Logs を削除します。
 - dice-server
 - petclinic
 - /aws/lambda/cwsyn*
+
+CloudWatch アラームを削除します。  
+
+
+<br />
+
+[目次へ戻る](./README.md)  

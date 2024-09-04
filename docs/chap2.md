@@ -194,5 +194,6 @@ X Ray 画面でトレースを見た際に、ログも表示されていたこ�
 
 
 <br />
-[目次へ戻る](./README.md)
-[Chapter3へ](./chap3.md)
+
+[目次へ戻る](./README.md)  
+[Chapter3へ](./chap3.md)  
